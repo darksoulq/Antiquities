@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:shaped",
+  "id": "antiquities:membrane_cowl",
+  "shape": [
+    "mmmm",
+    "m m"
+  ],
+  "ingredients": {
+    "m": ["minecraft:phantom_membrane"]
+  },
+  "result": "antiquities:membrane_cowl",
+  "category": "EQUIPMENT",
+  "replace": false
+}

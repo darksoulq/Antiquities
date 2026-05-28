@@ -1,0 +1,8 @@
+{
+  "type": "abyssallib:item",
+  "id": "relique:charm",
+  "values": [
+    "antiquities:idol_of_depths",
+    "antiquities:witchs_brewstone"
+  ]
+}

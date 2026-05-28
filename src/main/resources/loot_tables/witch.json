@@ -1,0 +1,24 @@
+{
+  "vanilla_id": "minecraft:entities/witch",
+  "merge_strategy": "MERGE",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "item",
+          "name": "antiquities:witchs_brewstone",
+          "weight": 1,
+          "quality": 0
+        }
+      ],
+      "conditions": [
+        {
+          "type": "abyssallib:random_chance",
+          "chance": 0.5
+        }
+      ]
+    }
+  ]
+}

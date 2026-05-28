@@ -1,0 +1,17 @@
+name: Antiquities
+version: '${version}'
+
+main: com.github.darksoulq.antiquities.Antiquities
+api-version: '26.1.2'
+load: POSTWORLD
+
+folia-supported: true
+
+dependencies:
+  server:
+    AbyssalLib:
+      required: true
+      load: BEFORE
+    Relique:
+      required: true
+      load: BEFORE

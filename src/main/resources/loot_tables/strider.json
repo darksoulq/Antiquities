@@ -1,0 +1,28 @@
+{
+  "vanilla_id": "minecraft:entities/strider",
+  "merge_strategy": "MERGE",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "item",
+          "name": "antiquities:strider_hide_girdle",
+          "weight": 1,
+          "quality": 0
+        }
+      ],
+      "conditions": [
+        {
+          "type": "abyssallib:random_chance",
+          "chance": 0.5
+        },
+        {
+          "type": "antiquities:damage_type",
+          "id": "minecraft:freeze"
+        }
+      ]
+    }
+  ]
+}

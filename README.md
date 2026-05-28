@@ -36,7 +36,7 @@ The plugin also adds advancements for all the relics.
   <a href="https://cdn.jsdelivr.net/gh/darksoulq/ImageStorage/plugin_icons/v1/antiquities/strider_girdle.gif">
     <img src="https://cdn.jsdelivr.net/gh/darksoulq/ImageStorage/plugin_icons/v1/antiquities/strider_girdle.gif" width="100%" />
   </a><br/>
-  <sub><b>Permissions</b></sub>
+  <sub><b>Strider Hide Girdle</b></sub>
 </td>
 </tr>
 </table>

@@ -1,0 +1,23 @@
+{
+  "vanilla_id": "minecraft:entities/ravager",
+  "merge_strategy": "MERGE",
+  "pools": [
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "item",
+          "name": "antiquities:heart_of_village",
+          "weight": 1,
+          "quality": 0
+        }
+      ],
+      "conditions": [
+        {
+          "type": "antiquities:is_raid"
+        }
+      ]
+    }
+  ]
+}

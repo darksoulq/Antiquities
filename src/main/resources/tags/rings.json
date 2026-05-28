@@ -1,0 +1,8 @@
+{
+  "type": "abyssallib:item",
+  "id": "relique:ring",
+  "values": [
+    "antiquities:piglin_signet",
+    "antiquities:blaze_ember_ring"
+  ]
+}

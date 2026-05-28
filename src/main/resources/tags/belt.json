@@ -1,0 +1,8 @@
+{
+  "type": "abyssallib:item",
+  "id": "relique:belt",
+  "values": [
+    "antiquities:strider_hide_girdle",
+    "antiquities:chorus_buckle"
+  ]
+}

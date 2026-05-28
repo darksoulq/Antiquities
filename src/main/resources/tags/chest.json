@@ -1,0 +1,7 @@
+{
+  "type": "abyssallib:item",
+  "id": "relique:chest",
+  "values": [
+    "antiquities:evokers_mantle"
+  ]
+}

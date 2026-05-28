@@ -1,0 +1,8 @@
+{
+  "type": "abyssallib:item",
+  "id": "relique:head",
+  "values": [
+    "antiquities:echoing_circlet",
+    "antiquities:membrane_cowl"
+  ]
+}
