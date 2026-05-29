@@ -12,6 +12,10 @@ repositories {
     maven {
         url = uri("https://jitpack.io")
     }
+    maven {
+        name = "faststatsReleases"
+        url = uri("https://repo.faststats.dev/releases")
+    }
 }
 
 dependencies {
@@ -19,6 +23,7 @@ dependencies {
 
     compileOnly("com.github.darksoulq:AbyssalLib:v2.3.6-mc.26.1.2")
     compileOnly("com.github.darksoulq:Relique:v2.1.2-mc.26.1.2")
+    compileOnly("dev.faststats.metrics:bukkit:0.22.0")
 }
 
 java {
