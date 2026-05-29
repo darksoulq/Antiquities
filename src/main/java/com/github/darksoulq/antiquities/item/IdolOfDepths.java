@@ -13,7 +13,9 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemRarity;
 
 import java.util.List;
@@ -41,7 +43,23 @@ public class IdolOfDepths extends RelicItem {
 
     @Override
     public void onHurt(EntityDamageByEntityEvent event, RelicAPI.SlotResult slot) {
-        if (!(event.getEntity() instanceof LivingEntity victim) || !(event.getDamager() instanceof LivingEntity attacker)) return;
+        if (!(event.getEntity() instanceof LivingEntity victim)) return;
+
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+            cause != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK &&
+            cause != EntityDamageEvent.DamageCause.PROJECTILE) {
+            return;
+        }
+
+        LivingEntity attacker = null;
+        if (event.getDamager() instanceof LivingEntity entity) {
+            attacker = entity;
+        } else if (event.getDamager() instanceof Projectile proj && proj.getShooter() instanceof LivingEntity shooter) {
+            attacker = shooter;
+        }
+
+        if (attacker == null) return;
 
         if (victim.isInWater()) {
             attacker.damage(2.0, DamageSource.builder(DamageType.MAGIC)

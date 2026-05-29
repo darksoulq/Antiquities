@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChorusBuckle extends RelicItem {
+    private static final Key COOLDOWN_KEY = Key.key(Antiquities.PLUGIN_ID, "chorus_buckle");
+
     public ChorusBuckle(Key id) {
         super(id);
         setData(new RelicProperties(List.of(
@@ -61,27 +63,31 @@ public class ChorusBuckle extends RelicItem {
         Antiquities plugin = JavaPlugin.getPlugin(Antiquities.class);
         CooldownResult cdResult = plugin.getCooldown().acquire(
             CooldownScope.player(player),
-            Key.key(Antiquities.PLUGIN_ID, "chorus_buckle"),
+            COOLDOWN_KEY,
             300,
             TimeUnit.TICKS
         );
 
         if (!cdResult.isReady()) return;
-        Advancements.CHORUS_BUCKLE_USE.getProgress(player).awardCriterion("impossible");
+
+        event.setCancelled(true);
 
         Location loc = player.getLocation();
         World world = loc.getWorld();
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
+        int minHeight = world.getMinHeight();
+        int maxHeight = world.getMaxHeight();
+
         for (int i = 0; i < 16; i++) {
-            double x = loc.getX() + (random.nextDouble() - 0.5) * 16.0;
-            double targetY = loc.getY() + (random.nextInt(16) - 8);
-            double y = Math.max(world.getMinHeight(), Math.min(world.getMaxHeight() - 1, targetY));
-            double z = loc.getZ() + (random.nextDouble() - 0.5) * 16.0;
+            double x = loc.getX() + (random.nextDouble() - 0.5) * 32.0;
+            double targetY = loc.getY() + (random.nextInt(32) - 16);
+            double y = Math.max(minHeight, Math.min(maxHeight - 1, targetY));
+            double z = loc.getZ() + (random.nextDouble() - 0.5) * 32.0;
 
             Location target = new Location(world, x, y, z, loc.getYaw(), loc.getPitch());
 
-            while (target.getY() > world.getMinHeight() && !target.getBlock().getType().isSolid()) {
+            while (target.getY() > minHeight && !target.getBlock().getType().isSolid()) {
                 target.subtract(0, 1, 0);
             }
 
@@ -95,16 +101,15 @@ public class ChorusBuckle extends RelicItem {
 
             target.add(0, 1, 0);
 
-            event.setCancelled(true);
-
             world.playSound(loc, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1.0f, 1.0f);
-            player.teleport(target, PlayerTeleportEvent.TeleportCause.CONSUMABLE_EFFECT);
+            player.teleportAsync(target, PlayerTeleportEvent.TeleportCause.CONSUMABLE_EFFECT);
             world.playSound(target, Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1.0f, 1.0f);
 
+            Advancements.CHORUS_BUCKLE_USE.getProgress(player).awardCriterion("impossible");
             player.setCooldown(slot.item(), 300);
             return;
         }
 
-        plugin.getCooldown().reset(CooldownScope.player(player), Key.key(Antiquities.PLUGIN_ID, "chorus_buckle"));
+        plugin.getCooldown().reset(CooldownScope.player(player), COOLDOWN_KEY);
     }
 }

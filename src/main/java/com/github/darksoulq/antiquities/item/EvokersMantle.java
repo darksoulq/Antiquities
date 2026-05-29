@@ -37,6 +37,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 
 public class EvokersMantle extends RelicItem {
+    private static final Key COOLDOWN_KEY = Key.key(Antiquities.PLUGIN_ID, "evokers_mantle");
+    private static final NamespacedKey OWNER_KEY = new NamespacedKey(Antiquities.PLUGIN_ID, "vex_owner");
+
     public EvokersMantle(Key id) {
         super(id);
         setData(new RelicProperties(List.of(
@@ -64,10 +67,9 @@ public class EvokersMantle extends RelicItem {
     public void onTarget(EntityTargetEvent event, RelicAPI.SlotResult slot) {
         if (!(event.getEntity() instanceof Vex vex)) return;
 
-        NamespacedKey ownerKey = new NamespacedKey(Antiquities.PLUGIN_ID, "vex_owner");
-        if (!vex.getPersistentDataContainer().has(ownerKey, PersistentDataType.STRING)) return;
+        if (!vex.getPersistentDataContainer().has(OWNER_KEY, PersistentDataType.STRING)) return;
 
-        String ownerUuid = vex.getPersistentDataContainer().get(ownerKey, PersistentDataType.STRING);
+        String ownerUuid = vex.getPersistentDataContainer().get(OWNER_KEY, PersistentDataType.STRING);
         if (ownerUuid == null) return;
         if (event.getTarget() == null) return;
         if (!ownerUuid.equals(event.getTarget().getUniqueId().toString())) return;
@@ -83,29 +85,29 @@ public class EvokersMantle extends RelicItem {
         AttributeInstance maxHealthAttr = victim.getAttribute(Attribute.MAX_HEALTH);
         if (maxHealthAttr == null) return;
 
-        if ((victim.getHealth() - event.getFinalDamage()) >= (maxHealthAttr.getValue() * 0.3)) return;
+        double finalHealth = victim.getHealth() - event.getFinalDamage();
+        if (finalHealth >= (maxHealthAttr.getValue() * 0.3)) return;
 
         Antiquities plugin = JavaPlugin.getPlugin(Antiquities.class);
         CooldownResult cdResult = plugin.getCooldown().acquire(
             CooldownScope.entity(victim),
-            Key.key(Antiquities.PLUGIN_ID, "evokers_mantle"),
+            COOLDOWN_KEY,
             600,
             TimeUnit.TICKS
         );
 
         if (!cdResult.isReady()) return;
 
-        NamespacedKey ownerKey = new NamespacedKey(Antiquities.PLUGIN_ID, "vex_owner");
         String victimUuid = victim.getUniqueId().toString();
+
+        victim.getWorld().playSound(victim.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, 1.0f, 1.0f);
 
         for (int i = 0; i < 2; i++) {
             victim.getWorld().spawn(victim.getLocation().add(0, 1, 0), Vex.class, v -> {
-                v.getPersistentDataContainer().set(ownerKey, PersistentDataType.STRING, victimUuid);
+                v.getPersistentDataContainer().set(OWNER_KEY, PersistentDataType.STRING, victimUuid);
                 v.setTarget(attacker);
 
                 VexTracker.add(victim.getUniqueId(), v);
-
-                v.getWorld().playSound(v.getLocation(), Sound.ENTITY_EVOKER_PREPARE_SUMMON, 1.0f, 1.0f);
 
                 Particles.builder()
                     .origin(() -> v.getLocation().add(0, 0.5, 0))

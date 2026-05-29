@@ -13,6 +13,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.ItemRarity;
@@ -21,6 +22,9 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.List;
 
 public class MembraneCowl extends RelicItem {
+    private static final Key MODIFIER_KEY = Key.key(Antiquities.PLUGIN_ID, "membrane_cowl");
+    private static final NamespacedKey AGGRO_KEY = new NamespacedKey(Antiquities.PLUGIN_ID, "cowl_aggro");
+
     public MembraneCowl(Key id) {
         super(id);
         setData(new RelicProperties(List.of(
@@ -46,19 +50,18 @@ public class MembraneCowl extends RelicItem {
         if (event.getTarget() == null) return;
 
         EntityTargetEvent.TargetReason reason = event.getReason();
-        NamespacedKey aggroKey = new NamespacedKey(Antiquities.PLUGIN_ID, "cowl_aggro");
 
         if (reason == EntityTargetEvent.TargetReason.TARGET_ATTACKED_ENTITY ||
             reason == EntityTargetEvent.TargetReason.TARGET_ATTACKED_NEARBY_ENTITY ||
             reason == EntityTargetEvent.TargetReason.CUSTOM ||
             reason == EntityTargetEvent.TargetReason.UNKNOWN) {
 
-            phantom.getPersistentDataContainer().set(aggroKey, PersistentDataType.STRING, event.getTarget().getUniqueId().toString());
+            phantom.getPersistentDataContainer().set(AGGRO_KEY, PersistentDataType.STRING, event.getTarget().getUniqueId().toString());
             return;
         }
 
-        if (phantom.getPersistentDataContainer().has(aggroKey, PersistentDataType.STRING)) {
-            String uuid = phantom.getPersistentDataContainer().get(aggroKey, PersistentDataType.STRING);
+        if (phantom.getPersistentDataContainer().has(AGGRO_KEY, PersistentDataType.STRING)) {
+            String uuid = phantom.getPersistentDataContainer().get(AGGRO_KEY, PersistentDataType.STRING);
             if (uuid != null && uuid.equals(event.getTarget().getUniqueId().toString())) {
                 return;
             }
@@ -70,9 +73,17 @@ public class MembraneCowl extends RelicItem {
 
     @Override
     public void onAttack(EntityDamageByEntityEvent event, RelicAPI.SlotResult slot) {
-        if (event.getEntity() instanceof Phantom phantom && event.getDamager() instanceof LivingEntity attacker) {
-            NamespacedKey aggroKey = new NamespacedKey(Antiquities.PLUGIN_ID, "cowl_aggro");
-            phantom.getPersistentDataContainer().set(aggroKey, PersistentDataType.STRING, attacker.getUniqueId().toString());
+        if (!(event.getEntity() instanceof Phantom phantom)) return;
+
+        LivingEntity attacker = null;
+        if (event.getDamager() instanceof LivingEntity entity) {
+            attacker = entity;
+        } else if (event.getDamager() instanceof Projectile proj && proj.getShooter() instanceof LivingEntity shooter) {
+            attacker = shooter;
+        }
+
+        if (attacker != null) {
+            phantom.getPersistentDataContainer().set(AGGRO_KEY, PersistentDataType.STRING, attacker.getUniqueId().toString());
             phantom.setTarget(attacker);
         }
     }

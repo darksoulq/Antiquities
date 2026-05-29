@@ -43,7 +43,7 @@ tasks {
         )
 
         downloadPlugins {
-            modrinth("abyssallib", "2.3.6-mc.26.1.2")
+            modrinth("abyssallib", "2.3.7-mc.26.1.2")
             modrinth("relique", "2.1.2-mc.26.1.2")
         }
     }
@@ -70,7 +70,7 @@ tasks.named<RunServer>("runFolia") {
     )
 
     downloadPlugins {
-        modrinth("abyssallib", "2.3.6-mc.26.1.2")
+        modrinth("abyssallib", "2.3.7-mc.26.1.2")
         modrinth("relique", "2.1.2-mc.26.1.2")
     }
 }

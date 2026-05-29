@@ -28,8 +28,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.Set;
 
 public class WitchsBrewstone extends RelicItem {
+    private static final Key COOLDOWN_KEY = Key.key(Antiquities.PLUGIN_ID, "witchs_brewstone");
+    private static final Set<PotionEffectType> PURIFIABLE_EFFECTS = Set.of(
+        PotionEffectType.POISON,
+        PotionEffectType.WITHER,
+        PotionEffectType.SLOWNESS
+    );
+
     public WitchsBrewstone(Key id) {
         super(id);
         setData(new RelicProperties(List.of(
@@ -62,13 +70,13 @@ public class WitchsBrewstone extends RelicItem {
         if (newEffect == null) return;
 
         PotionEffectType type = newEffect.getType();
-        if (!type.equals(PotionEffectType.POISON) && !type.equals(PotionEffectType.WITHER) && !type.equals(PotionEffectType.SLOWNESS)) return;
+        if (!PURIFIABLE_EFFECTS.contains(type)) return;
         if (!(event.getEntity() instanceof LivingEntity victim)) return;
 
         Antiquities plugin = JavaPlugin.getPlugin(Antiquities.class);
         CooldownResult cdResult = plugin.getCooldown().acquire(
             CooldownScope.entity(victim),
-            Key.key(Antiquities.PLUGIN_ID, "witchs_brewstone"),
+            COOLDOWN_KEY,
             600,
             TimeUnit.TICKS
         );
@@ -76,6 +84,7 @@ public class WitchsBrewstone extends RelicItem {
         if (!cdResult.isReady()) return;
 
         event.setCancelled(true);
+        victim.removePotionEffect(type);
         victim.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 0));
 
         if (victim instanceof Player p) {

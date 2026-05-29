@@ -17,6 +17,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 
 public class EchoingCirclet extends RelicItem {
+    private static final Key COOLDOWN_KEY = Key.key(Antiquities.PLUGIN_ID, "echoing_circlet");
+
     public EchoingCirclet(Key id) {
         super(id);
         setData(new RelicProperties(List.of(
@@ -50,11 +53,20 @@ public class EchoingCirclet extends RelicItem {
 
     @Override
     public void onAttack(EntityDamageByEntityEvent event, RelicAPI.SlotResult slot) {
-        if (!(event.getEntity() instanceof LivingEntity victim) || !(event.getDamager() instanceof LivingEntity attacker)) return;
+        if (!(event.getEntity() instanceof LivingEntity victim)) return;
+
+        LivingEntity attacker = null;
+        if (event.getDamager() instanceof LivingEntity entity) {
+            attacker = entity;
+        } else if (event.getDamager() instanceof Projectile proj && proj.getShooter() instanceof LivingEntity shooter) {
+            attacker = shooter;
+        }
+
+        if (attacker == null) return;
 
         CooldownResult cdResult = JavaPlugin.getPlugin(Antiquities.class).getCooldown().acquire(
             CooldownScope.entity(attacker),
-            Key.key(Antiquities.PLUGIN_ID, "echoing_circlet"),
+            COOLDOWN_KEY,
             200,
             TimeUnit.TICKS
         );
