@@ -6,6 +6,9 @@
 
 ---
 
+## Requirements:
+The plugin requires [AbyssalLib](https://modrinth.com/plugin/abyssallib) and [Relique](https://modrinth.com/plugin/relique)
+
 ## Features
 
 Antiquities is a plugin based on [Relique](https://modrinth.com/plugin/relique/) and adds 9 Relics that fit well into vanilla.
