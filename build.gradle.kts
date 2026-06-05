@@ -21,7 +21,7 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("26.1.2.build.+")
 
-    compileOnly("com.github.darksoulq:AbyssalLib:v2.3.6-mc.26.1.2")
+    compileOnly("com.github.darksoulq:AbyssalLib:v2.4.0-mc.26.1.2-alpha.1")
     compileOnly("com.github.darksoulq:Relique:v2.1.2-mc.26.1.2")
     compileOnly("dev.faststats.metrics:bukkit:0.22.0")
 }
@@ -43,8 +43,8 @@ tasks {
         )
 
         downloadPlugins {
-            modrinth("abyssallib", "2.3.7-mc.26.1.2")
-            modrinth("relique", "2.1.2-mc.26.1.2")
+            modrinth("abyssallib", "2.4.0-mc.26.1.2-alpha.1")
+//            modrinth("relique", "2.1.2-mc.26.1.2")
         }
     }
 
@@ -70,7 +70,7 @@ tasks.named<RunServer>("runFolia") {
     )
 
     downloadPlugins {
-        modrinth("abyssallib", "2.3.7-mc.26.1.2")
-        modrinth("relique", "2.1.2-mc.26.1.2")
+        modrinth("abyssallib", "2.4.0-mc.26.1.2-alpha.1")
+//        modrinth("relique", "2.1.2-mc.26.1.2")
     }
 }
